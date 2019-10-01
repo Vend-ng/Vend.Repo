@@ -29,3 +29,7 @@ App Requirements:
 
     - The app presents the user with a "Thank You" message or something of that nature.
 
+Extra App Functionality (Optional)
+    - The ability to seach by item and give a list of vending machines that contain that item. (Should probably be impelented)
+    - Remembering the User's favorite orders and allow them to quickly reorder them
+    - Recommend Similar items to the user and machines where they can find them. (Ex. The user buys Vanilla Coke, recommend Cherry Coke)
