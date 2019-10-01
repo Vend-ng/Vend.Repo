@@ -1,0 +1,31 @@
+App Requirements:
+    - User must be able to create a secure account
+    - User must be able to connect their account with with Google Pay or Apple Pay
+    - User must be able to see via a map vending machines within a certain geographical radius
+      of their location
+    - User must be able to select a vending machine from the map
+    - User will be presented with a list of items that are sold in the machine along with a picture of the item and 
+      the price.
+    - The user selects the item they want to buy and then the item is placed in a cart of 1 item. 
+      (Maybe multiple items later but not at first)
+      The user needs to confirm the cart is moved to 'pay' screen.
+    - The user selects the type of payment they wish to use and then pays for the item.
+      (The payment needs to actually be delayed until the user picks up their item)
+
+    - The user is then sent to a 'Pickup' page.
+    - The 'Pickup' screen will just inform the user that they need to walk to the machine and that
+      their item is reserved for X minutes.
+    - When the user arrives at the machine, they will be presented with a way to interact with the machine
+      to confirm his/her identity. There can be one of many different ways to do this. 
+      In all options the User clicks a button that says "IM HERE" on the app and they are presented with:
+      Some Options: 
+        - A 4 digit code, the user pushes that code into a number pad on the machine and the identity is confirmed
+        - A request to place their phone on an NFC reader on the vending machine
+        - Other Options?
+    
+    - Once the user's identity is confirmed, the software on the Pi needs to send a message that the user has arrived, and 
+      the backend needs to confirm this message, then the payment needs to be authorized. Once the payment is authorized, the 
+      the backend sends a message back to the Pi and then the user's drink is dispensed. 
+
+    - The app presents the user with a "Thank You" message or something of that nature.
+
