@@ -33,3 +33,5 @@ Extra App Functionality (Optional)
     - The ability to seach by item and give a list of vending machines that contain that item. (Should probably be impelented)
     - Remembering the User's favorite orders and allow them to quickly reorder them
     - Recommend Similar items to the user and machines where they can find them. (Ex. The user buys Vanilla Coke, recommend Cherry Coke)
+    - Store nutritional information on items being sold. (Might be required by law?)
+    
