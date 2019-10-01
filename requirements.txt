@@ -34,4 +34,35 @@ Extra App Functionality (Optional)
     - Remembering the User's favorite orders and allow them to quickly reorder them
     - Recommend Similar items to the user and machines where they can find them. (Ex. The user buys Vanilla Coke, recommend Cherry Coke)
     - Store nutritional information on items being sold. (Might be required by law?)
+    - The user could arrive at the machine without paying ahead of time, select the item they wish to buy and pay via mobile. 
+      They could push a button on the app that says, "Select at machine" and they walk to the machine, select the item and pay for 
+      the item they would like from the app.
+    - Offer Deals or Cupons to the user on purchasing items (this could be very troublesome when it comes to owners of machines as prices vary often)
+
+
+Hardware Requirements:
+    - Raspberry Pi needs to be able to store the local inventory for the machine
+    - Pi needs to be able to send and receive messages from the backend about mobile orders
+    - Pi stills needs to allow users to normally pay for and receive items the "old fashioned way"
+    - Pi sends signals to arduino which will decide which servos to turn on the machine to release the item
+    - Arduino connected to all of the servos on the machine which release the items
+    - Pi connected to all inputs the user can have on the machine as well as an LCD screen for output
+    - LCD screen shows traditional vending machine information to non-mobile order users as well as presenting info to
+      mobile order users. 
     
+    LCD Screen Output:
+        - This could be a touch screen which will display the number pad for mobile users
+        - For non-mobile users the screen will tell the price of items when the user pushes a button, and 
+          tells the user when an item is "Sold Out" or "Reserved"
+        - When a mobile users arrives and clicks "I'm Here" the LCD screen, the screen could display the user's name
+          on the bottom (similar to mobile orders from Sonic).
+
+Backend Requirements:
+    - Sending and receiving signals both from the mobile app and Raspberry Pi's on every machine
+    - Storing account information for all users
+    - Storing all unique items that are sold in any machine and information about those items
+      Price of item might need to be stored locally depending on the location and owner of machine
+    - Storing IP, location, and other important information for every machine
+    
+        
+
