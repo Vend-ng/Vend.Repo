@@ -1,19 +1,20 @@
-import React from 'react';
+import { Image } from 'react-native';
+
+
+import { createAppContainer, } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { StyleSheet, Text, View } from 'react-native';
+import ItemScreen from './screens/ItemScreen';
+import LocationScreen from './screens/LocationScreen';
+import FavoritesScreen from './screens/FavoritesScreen'
+import CartScreen from './screens/CartScreen'
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+const TabNavigator = createBottomTabNavigator({
+  Items: ItemScreen,
+  Locations: LocationScreen,
+  Favorites: FavoritesScreen,
+  Cart: CartScreen
 });
+
+export default createAppContainer(TabNavigator);
