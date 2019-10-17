@@ -9,12 +9,14 @@ import ItemScreen from './screens/ItemScreen';
 import LocationScreen from './screens/LocationScreen';
 import FavoritesScreen from './screens/FavoritesScreen'
 import CartScreen from './screens/CartScreen'
+import GraphqlScreen from './screens/GraphqlScreen'
 
 const TabNavigator = createBottomTabNavigator({
   Items: ItemScreen,
   Locations: LocationScreen,
   Favorites: FavoritesScreen,
-  Cart: CartScreen
+  Cart: CartScreen,
+  GraphQL: GraphqlScreen
 });
 
 export default createAppContainer(TabNavigator);
