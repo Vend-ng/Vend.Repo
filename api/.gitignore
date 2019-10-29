@@ -1,0 +1,6 @@
+.docker/web.env
+.docker/letsencrypt/*
+!.docker/letsencrypt/nginx/
+.docker/letsencrypt/nginx/proxy-confs/
+.docker/letsencrypt/nginx/dhparams.pem
+node_modules
