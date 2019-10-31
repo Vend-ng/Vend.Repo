@@ -89,4 +89,14 @@ export class Product extends BaseEntity {
   )
   @JoinTable()
   public categories: Lazy<ProductCategory[]>;
+
+  @Field((returns: void) => [User], { defaultValue: [] })
+  @ManyToMany(
+    (returns: void) => User,
+    (user: User) => user.favorites, {
+      cascade: true,
+      lazy: true
+    }
+  )
+  public favoritedBy: Lazy<User[]>;
 }
