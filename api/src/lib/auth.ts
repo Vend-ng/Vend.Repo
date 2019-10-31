@@ -14,7 +14,6 @@ export const authChecker: AuthChecker<IContext> = async (
   { context }: { context: IContext },
   roles: string[]
 ) => {
-  console.log('auth checker', context, roles);
   const user: User | undefined = context.state.user;
   if (process.env.NODE_ENV === "development") {
     const username = user ? user.email : undefined;
