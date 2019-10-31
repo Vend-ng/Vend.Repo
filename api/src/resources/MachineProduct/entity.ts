@@ -5,14 +5,13 @@ import {
   Entity,
   Index,
   ManyToOne,
-  PrimaryGeneratedColumn,
   UpdateDateColumn
 } from "typeorm";
 import { Lazy } from "../../lib/helpers";
 import { Machine } from '../Machine';
 import { Product } from '../Product';
 
-import { Field, ID, ObjectType } from 'type-graphql';
+import { Field, Int, ObjectType } from 'type-graphql';
 
 /**
  * Machine which hosts products
@@ -20,26 +19,27 @@ import { Field, ID, ObjectType } from 'type-graphql';
 @ObjectType()
 @Entity()
 export class MachineProduct extends BaseEntity {
-  @Field((returns: void) => ID)
-  @PrimaryGeneratedColumn('uuid')
-  public readonly id: string;
-
-  @Field()
-  @Column()
+  @Field((returns: void) => Int)
+  @Column({ default: 0 })
   public quantity: number;
 
   @Field((returns: void) => Product)
   @ManyToOne(
     (returns: void) => Product,
-    (product: Product) => product.machineProducts
+    (product: Product) => product.machineProducts,
+    {
+      lazy: true,
+      primary: true
+    }
   )
-  public product: Product;
+  public product: Lazy<Product>;
 
   @ManyToOne(
     (returns: void) => Machine,
     (machine: Machine) => machine.products,
     {
-      lazy: true
+      lazy: true,
+      primary: true
     }
   )
   public machine: Lazy<Machine>;
