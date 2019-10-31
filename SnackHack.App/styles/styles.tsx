@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { relative } from 'path';
 
 const styles = StyleSheet.create({
     container: {
@@ -9,9 +10,9 @@ const styles = StyleSheet.create({
     },
 
     map: {
-      marginTop: 10,
-      position: "absolute",
+      flex: 1,
     },
+
   });
 
   export { styles } 
