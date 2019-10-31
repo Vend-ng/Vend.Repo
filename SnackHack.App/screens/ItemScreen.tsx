@@ -8,7 +8,7 @@ export default class ItemScreen extends Component {
     render() {
         return(
             <View style={styles.items_container}>
-                <Text style={styles.items_text}>Test Machine</Text>
+                <Text style={styles.items_text}>MST BCH 01</Text>
                 <ScrollView>
                     <View style={styles.items_scroll}>
                     <Item id={3389}

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import { relative } from 'path';
 
 const styles = StyleSheet.create({
     container: {
@@ -41,11 +42,11 @@ const styles = StyleSheet.create({
     item_text: {
       textAlign: "center"
     },
-    navigation: {
-      tintColor: 'black',
-      width: 16,
-      height: 26
-    }
+
+    map: {
+      flex: 1,
+    },
+
   });
 
   export { styles } 
