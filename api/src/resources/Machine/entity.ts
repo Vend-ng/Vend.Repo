@@ -27,7 +27,7 @@ export class Machine extends BaseEntity {
   @Column()
   public shortName: string;
 
-  @Field((returns: void) => [User], { nullable: true })
+  @Field((returns: void) => [User], { defaultValue: [] })
   @ManyToMany(
     (returns: void) => User,
     (user: User) => user.machinesOwned,
@@ -45,6 +45,7 @@ export class Machine extends BaseEntity {
 
   // TODO: Actually store the location of the machine
 
+  @Field((returns: void) => [MachineProduct], { defaultValue: [] })
   @OneToMany(
     (returns: void) => MachineProduct,
     (machineProduct: MachineProduct) => machineProduct.product,
