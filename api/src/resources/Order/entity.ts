@@ -60,6 +60,10 @@ export class Order extends BaseEntity {
   public expires: Date;
 
   @Field()
+  @Column({ default: false })
+  public finished: boolean;
+
+  @Field()
   @Column()
   public code: string;
 }
