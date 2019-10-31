@@ -101,18 +101,18 @@ export class User extends BaseEntity {
       lazy: true
     }
   )
- @JoinTable()
+  @JoinTable()
   public orders: Lazy<Order[]>;
 
- @Field((returns: void) => [Machine], { nullable: true })
- @ManyToMany(
+  @Field((returns: void) => [Machine], { nullable: true })
+  @ManyToMany(
     (returns: void) => Machine,
     (machine: Machine) => machine.owners,
     {
       lazy: true
     }
   )
- @JoinTable()
+  @JoinTable()
   public machinesOwned: Lazy<Machine[]>;
 
   @Field((returns: void) => [Product], { nullable: true })

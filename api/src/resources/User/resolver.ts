@@ -66,6 +66,17 @@ export class UserResolver {
   //   return undefined;
   // }
 
+  @Authorized()
+  @Mutation((returns: void) => [Product])
+  public async addToFavorites(@Arg("productId") productId: string, @Ctx() context: IContext) {
+    let user = context.state.user;
+    const product = await this.productRepo.findOneOrFail({ id: productId });
+    user.favorites.push(product);
+    user = await user.save();
+
+    return user.favorites;
+  }
+
   @Query((returns: void) => User, { name: `me`, nullable: true })
   protected async me(@Ctx() context: IContext) {
     const user: User | undefined = context.state.user;
@@ -76,3 +87,4 @@ export class UserResolver {
     return user;
   }
 }
+
