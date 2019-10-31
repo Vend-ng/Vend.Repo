@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Lazy } from "../../lib/helpers";
 import { MachineProduct } from '../MachineProduct';
+import { Order } from "../Order";
 import { User } from "../User";
 
 import { Field, ID, ObjectType } from 'type-graphql';
@@ -54,4 +55,12 @@ export class Machine extends BaseEntity {
     }
   )
   public products: Lazy<MachineProduct[]>;
+
+  @Field((returns: void) => Order)
+  @OneToMany(
+    (returns: void) => Order,
+    (order: Order) => order.machine,
+    { lazy: true }
+  )
+  public orders: Lazy<Order[]>;
 }

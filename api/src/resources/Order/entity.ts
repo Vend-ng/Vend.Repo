@@ -13,6 +13,7 @@ import {
 import { Field, ID, ObjectType } from 'type-graphql';
 
 import { Lazy } from '../../lib/helpers';
+import { Machine } from "../Machine";
 import { Product } from '../Product';
 import { User } from '../User';
 
@@ -51,6 +52,14 @@ export class Order extends BaseEntity {
   )
   @JoinTable()
   public products: Lazy<Product[]>;
+
+  @Field((returns: void) => Machine)
+  @ManyToOne(
+    (returns: void) => Machine,
+    (machine: Machine) => machine.orders,
+    { lazy: true }
+  )
+  public machine: Lazy<Machine>;
 
   @CreateDateColumn()
   public readonly initiated: Date;
