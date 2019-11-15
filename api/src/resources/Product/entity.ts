@@ -36,6 +36,11 @@ export class Product extends BaseEntity {
   @JoinTable()
   public item: Lazy<Item>;
 
+  @Column({
+    default: "https://storage.cloud.google.com/snackhack/thumbnails/default.png"
+  })
+  public imageUrl: string;
+
   @ManyToMany(
     (returns: void) => User,
     (user: User) => user.productsOwned,
