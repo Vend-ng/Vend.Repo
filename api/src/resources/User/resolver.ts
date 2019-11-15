@@ -3,6 +3,7 @@ import {
   Authorized,
   Ctx,
   FieldResolver,
+  Mutation,
   Query,
   Resolver,
   Root
@@ -11,6 +12,7 @@ import { getRepository, Repository } from "typeorm";
 // import { Lazy } from "../../lib/helpers";
 import { IContext } from "../../lib/interfaces";
 // import { Permission } from "../Permission";
+import { Product } from "../Product";
 import { User } from "./entity";
 // import { UserCreateInput, UserDeletePayload, UserUpdateInput } from "./input";
 
@@ -23,6 +25,7 @@ import { User } from "./entity";
 @Resolver((returns: void) => User)
 export class UserResolver {
   private userRepo: Repository<User> = getRepository(User);
+  private productRepo: Repository<Product> = getRepository(Product);
   // Workaround waiting for
   // https://github.com/19majkel94/type-graphql/issues/351
   @Authorized()
@@ -70,8 +73,13 @@ export class UserResolver {
   @Mutation((returns: void) => [Product])
   public async addToFavorites(@Arg("productId") productId: string, @Ctx() context: IContext) {
     let user = context.state.user;
+    if (user === undefined) {
+      return [];
+    }
     const product = await this.productRepo.findOneOrFail({ id: productId });
-    user.favorites.push(product);
+    const favorites = await user.favorites;
+    favorites.push(product);
+    user.favorites = favorites;
     user = await user.save();
 
     return user.favorites;
