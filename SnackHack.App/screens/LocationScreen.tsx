@@ -4,11 +4,13 @@ import { styles } from '../styles/styles';
 import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Permissions from 'expo-permissions';
+import { NavigationInjectedProps, withNavigation } from 'react-navigation';
 import * as Animatable from 'react-native-animatable';
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
+import App from '../App';
 
-export default class ItemScreen extends Component {
+class LocationScreen extends Component<NavigationInjectedProps> {
 
     state = {
         latitude: null,
@@ -16,6 +18,8 @@ export default class ItemScreen extends Component {
         activeMarker: false,
         deactiveMarker: true,
     }
+
+
 
     //Ask user permission for location.
     async componentDidMount() {
@@ -49,6 +53,7 @@ export default class ItemScreen extends Component {
                 deactiveMarker: true
             })
         }
+
     }
 
     render() {
@@ -117,3 +122,5 @@ export default class ItemScreen extends Component {
         );
     }
 }
+
+export default withNavigation(LocationScreen);

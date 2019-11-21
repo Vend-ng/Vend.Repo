@@ -1,4 +1,6 @@
+import React from 'react';
 import { Image } from 'react-native';
+import { styles } from './styles/styles'
 
 
 import { createAppContainer, } from 'react-navigation';
@@ -12,11 +14,39 @@ import CartScreen from './screens/CartScreen'
 import GraphqlScreen from './screens/GraphqlScreen'
 
 const TabNavigator = createBottomTabNavigator({
-  Items: ItemScreen,
-  Locations: LocationScreen,
-  Favorites: FavoritesScreen,
-  Cart: CartScreen,
-  GraphQL: GraphqlScreen
+  Items: {
+    screen: ItemScreen,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => (
+        <Image source={require('./assets/items-icon.png')} style={{width: 42/3, height: 74/3}} />
+      )
+    }
+  },
+  Locations: {
+    screen: LocationScreen,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => (
+        <Image source={require('./assets/location-icon.png')} style={{width: 52/3, height: 73/3}} />
+      )
+    }
+  },
+  Favorites: {
+    screen: FavoritesScreen,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => (
+        <Image source={require('./assets/favorites-icon.png')} style={{width: 73/3, height: 67/3}} />
+      )
+    }
+  },
+  Settings: {
+    screen: CartScreen,
+    navigationOptions: {
+      tabBarIcon: ({ tintColor }) => (
+        <Image source={require('./assets/cart-icon.png')} style={{width: 69/3, height: 68/3}} />
+      )
+    }
+  }
+  //GraphQL: GraphqlScreen
 });
 
 export default createAppContainer(TabNavigator);
