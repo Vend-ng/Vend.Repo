@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View, Button } from 'react-native';
 import { styles } from '../styles/styles';
 import MapView, { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as Permissions from 'expo-permissions';
 import * as Animatable from 'react-native-animatable';
+import {createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
 
 export default class ItemScreen extends Component {
 
     state = {
         latitude: null,
         longitude: null,
+        activeMarker: false,
+        deactiveMarker: true,
     }
 
     //Ask user permission for location.
@@ -29,16 +33,22 @@ export default class ItemScreen extends Component {
     }
 
     markerOnPress = () => {
-        console.log("Evan")
-        return(
-            <View style = {{ marginBottom: 50, height: 50, backgroundColor: 'blue', flexDirection: 'row', padding: 5, alignItems: 'center', borderRadius: 10}}>
-                <Text style = {{fontSize: 24, color: 'blue'}}>Hello</Text>
-            </View>
-        );
-        // <Animatable.View animation = "slideInBottom" duration = {500} style = {{height: 50, backgroundColor: 'white', flexDirection: 'row', padding:5}}>
-            
-        // </Animatable.View> 
-
+        console.log("WHO PRESSED ME?!")
+        if(this.state.deactiveMarker)
+        {
+            this.setState({
+                ...this.state,
+                activeMarker: true,
+                deactiveMarker: false
+            })
+        }else if(this.state.activeMarker)
+        {
+            this.setState({
+                ...this.state,
+                activeMarker: false,
+                deactiveMarker: true
+            })
+        }
     }
 
     render() {
@@ -47,7 +57,7 @@ export default class ItemScreen extends Component {
             latitude: 37.955389,
             longitude: -91.772266,
         }
-
+        const {navigate} = this.props.navigation;
         if(latitude){
             return(
                 <View style = {styles.map}>
@@ -81,12 +91,19 @@ export default class ItemScreen extends Component {
                     >
                         <Marker 
                             title = "MST BCH 01"
-                            // description = "This is our first vending machine!"
-                            // pinColor = "#ffffff"
                             coordinate = {vendingMachine}
                             onPress = {this.markerOnPress}
                         />
                     </MapView>
+                    
+                    {(this.state.activeMarker) &&
+                        <View style = {{ marginBottom: 0, height: 75, backgroundColor: 'blue', flexDirection: 'row', padding: 5, alignItems: 'center', justifyContent: 'center',borderRadius: 10}}>
+                            <Button
+                                title = "Order Here"
+                                onPress = {() => navigate('Items')}
+                            />
+                        </View>
+                    }
 
                 </View>
 
