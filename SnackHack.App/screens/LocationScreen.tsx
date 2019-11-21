@@ -28,8 +28,13 @@ export default class ItemScreen extends Component {
     
     }
 
-    markerOnPress(){
+    markerOnPress = () => {
         console.log("Evan")
+        return(
+            <View style = {{ marginBottom: 50, height: 50, backgroundColor: 'blue', flexDirection: 'row', padding: 5, alignItems: 'center', borderRadius: 10}}>
+                <Text style = {{fontSize: 24, color: 'blue'}}>Hello</Text>
+            </View>
+        );
         // <Animatable.View animation = "slideInBottom" duration = {500} style = {{height: 50, backgroundColor: 'white', flexDirection: 'row', padding:5}}>
             
         // </Animatable.View> 
@@ -76,9 +81,10 @@ export default class ItemScreen extends Component {
                     >
                         <Marker 
                             title = "MST BCH 01"
+                            // description = "This is our first vending machine!"
                             // pinColor = "#ffffff"
                             coordinate = {vendingMachine}
-                            // onPress = {this.markerOnPress}
+                            onPress = {this.markerOnPress}
                         />
                     </MapView>
 
