@@ -1,72 +1,42 @@
-import {
-  Aborter,
-  BlobURL,
-  BlockBlobURL,
-  ContainerURL,
-  IUploadStreamToBlockBlobOptions,
-  Pipeline,
-  ServiceURL,
-  SharedKeyCredential,
-  StorageURL,
-  uploadStreamToBlockBlob
-} from "@azure/storage-blob";
+import awsSdk from "aws-sdk";
 import { Readable } from "stream";
 import { config } from "../config";
 
-const CONTAINER_NAME = "resumes";
-const EIGHT_MB = 8096 * 1000 * 1000;
-const STORAGE_ACCOUNT = config.AZURE_STORAGE_ACCOUNT;
-const STORAGE_KEY = config.AZURE_STORAGE_ACCOUNT_KEY;
+const s3: awsSdk.S3 = new awsSdk.S3({
+  accessKeyId: config.S3_ACCESS_KEY_ID,
+  endpoint: config.S3_ENDPOINT,
+  region: config.S3_REGION,
+  secretAccessKey: config.S3_SECRET_KEY_ID
+});
 
-const generatePipeline = (): Pipeline => {
-  const sharedKeyCredential = new SharedKeyCredential(
-    STORAGE_ACCOUNT,
-    STORAGE_KEY
+export const deleteFile: (url: string) => void = async (url: string) => {
+  // The URL will be something like
+  // https://mstacm-cdn-test.nyc3.digitaloceanspaces.com/test/UUID.pdf
+  // so this will split it down the middle and just give the 'test/UUID.pdf'
+  // portion.
+  const splitUrl: string[] = url.split(
+    `${config.S3_BUCKET_NAME}.${config.S3_ENDPOINT}/`
   );
-
-  return StorageURL.newPipeline(sharedKeyCredential);
-};
-
-const generateContainerURL = (containerName: string): ContainerURL => {
-  const pipeline = generatePipeline();
-  const serviceURL = new ServiceURL(`${config.AZURE_CDN_URI}`, pipeline);
-
-  return ContainerURL.fromServiceURL(serviceURL, CONTAINER_NAME);
-};
-
-const generateBlockBlobURL = (
-  containerURL: ContainerURL,
-  filename: string
-): BlockBlobURL => {
-  const blobURL = BlobURL.fromContainerURL(containerURL, filename);
-
-  return BlockBlobURL.fromBlobURL(blobURL);
-};
-
-export const deleteFile = async (url: string) => {
-  const pipeline = generatePipeline();
-  const blockBlobURL = new BlockBlobURL(url, pipeline);
-  await blockBlobURL.delete(Aborter.none);
+  const filename: string = splitUrl[1];
+  await s3
+    .deleteObject({ Bucket: config.S3_BUCKET_NAME, Key: filename })
+    .promise();
 };
 
 export const uploadFile = async (
   stream: Readable,
   filename: string,
-  options?: IUploadStreamToBlockBlobOptions
+  contentType?: string
 ): Promise<string> => {
-  const containerURL = generateContainerURL(CONTAINER_NAME);
-  try {
-    await containerURL.create(Aborter.none);
-  } catch (e) {}
-  const blockBlobURL = generateBlockBlobURL(containerURL, filename);
-  await uploadStreamToBlockBlob(
-    Aborter.none,
-    stream,
-    blockBlobURL,
-    EIGHT_MB,
-    16,
-    options
-  );
+  const response: awsSdk.S3.ManagedUpload.SendData = await s3
+    .upload({
+      ACL: "public-read",
+      Body: stream,
+      Bucket: config.S3_BUCKET_NAME,
+      ContentType: contentType,
+      Key: filename
+    })
+    .promise();
 
-  return Promise.resolve(blockBlobURL.url);
+  return response.Location;
 };
