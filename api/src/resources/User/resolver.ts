@@ -25,7 +25,7 @@ import { User } from "./entity";
 @Resolver((returns: void) => User)
 export class UserResolver {
   private userRepo: Repository<User> = getRepository(User);
-  private productRepo: Repository<Product> = getRepository(Product);
+  // private productRepo: Repository<Product> = getRepository(Product);
   // Workaround waiting for
   // https://github.com/19majkel94/type-graphql/issues/351
   @Authorized()
@@ -72,16 +72,13 @@ export class UserResolver {
   @Authorized()
   @Mutation((returns: void) => [Product])
   public async addToFavorites(@Arg("productId") productId: string, @Ctx() context: IContext) {
-    let user = context.state.user;
+    const user = context.state.user;
     if (user === undefined) {
       return [];
     }
-    const product = await this.productRepo.findOneOrFail({ id: productId });
-    const favorites = await user.favorites;
-    favorites.push(product);
-    user.favorites = favorites;
-    user = await user.save();
+    await User.createQueryBuilder().relation("favorites").of(user).add(productId);
 
+    // Since favorites are lazy loaded we can use the old user object
     return user.favorites;
   }
 

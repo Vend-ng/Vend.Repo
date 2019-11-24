@@ -22,7 +22,7 @@ export interface IConfig {
 const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN;
 export const config: IConfig = {
   JWT_ALGORITHM: "RS256",
-  JWT_AUDIENCE: "graphql.snackhack.tech",
+  JWT_AUDIENCE: "snackhack.auth0.com",
   JWT_ISSUER: `https://${AUTH0_DOMAIN}/`,
   JWT_JWKS_URI: `https://${AUTH0_DOMAIN}/.well-known/jwks.json`,
   JWT_USERINFO_URI: `https://${AUTH0_DOMAIN}/userinfo`,

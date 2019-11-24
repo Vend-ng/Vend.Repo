@@ -61,6 +61,7 @@ export class Order extends BaseEntity {
   )
   public machine: Lazy<Machine>;
 
+  @Field()
   @CreateDateColumn()
   public readonly initiated: Date;
 

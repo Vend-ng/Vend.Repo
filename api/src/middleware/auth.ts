@@ -15,6 +15,7 @@ import {
 import { config } from "../config";
 import { IContext, IUserInfo } from "../lib/interfaces";
 
+import { Application } from "../resources/Application";
 import { User } from "../resources/User";
 
 interface IPassportCallback extends VerifiedCallback {
@@ -135,13 +136,11 @@ passport.use(
         return done(new Error("Invalid UUID Length"), undefined);
       }
 
-      // const application = await Application.findOne({ token });
-      // if (!application) {
-      //   return done(new Error("Application was not found"), undefined);
-      // }
-
-      // const user = await application.user;
-      const user = new User();
+      const application = await Application.findOne({ token });
+      if (!application) {
+        return done(new Error("Application was not found"), undefined);
+      }
+      const user = await application.user;
 
       return done(undefined, user, { scope: "all" });
     } catch (err) {

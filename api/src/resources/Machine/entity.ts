@@ -2,11 +2,13 @@ import {
   BaseEntity,
   Column,
   Entity,
+  Index,
   JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn
 } from "typeorm";
+
 import { Lazy } from "../../lib/helpers";
 import { MachineProduct } from '../MachineProduct';
 import { Order } from "../Order";
@@ -19,6 +21,8 @@ import { Field, ID, ObjectType } from 'type-graphql';
  */
 @ObjectType()
 @Entity()
+// Disable synchronizing index
+@Index("MACHINE_EARTH_LOC_INDEX", { synchronize: false })
 export class Machine extends BaseEntity {
   @Field((returns: void) => ID)
   @PrimaryGeneratedColumn('uuid')
@@ -44,7 +48,16 @@ export class Machine extends BaseEntity {
   @Column()
   public locationDescription: string;
 
-  // TODO: Actually store the location of the machine
+  @Field()
+  @Column({type: "float8"})
+  public latitude: number;
+
+  @Field()
+  @Column({type: "float8"})
+  public longitude: number;
+
+  @Field()
+  public distance: number;
 
   @Field((returns: void) => [MachineProduct], { defaultValue: [] })
   @OneToMany(

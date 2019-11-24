@@ -12,6 +12,7 @@ import {
   UpdateDateColumn
 } from "typeorm";
 import { Lazy } from "../../lib/helpers";
+import { Application } from "../Application";
 import { Group } from "../Group";
 import { Machine } from '../Machine';
 import { Order } from "../Order";
@@ -135,4 +136,14 @@ export class User extends BaseEntity {
   )
   @JoinTable()
   public favorites: Lazy<Product[]>;
+
+  @OneToMany(
+    () => Application,
+    (application: Application) => application.user,
+    {
+      lazy: true
+    }
+  )
+  @JoinTable()
+  public applications: Lazy<Application[]>;
 }
