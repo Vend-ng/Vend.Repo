@@ -56,8 +56,6 @@ export class Machine extends BaseEntity {
   @Column({type: "float8"})
   public longitude: number;
 
-  @Field()
-  public distance: number;
 
   @Field((returns: void) => [MachineProduct], { defaultValue: [] })
   @OneToMany(

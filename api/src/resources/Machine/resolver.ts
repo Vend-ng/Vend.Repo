@@ -8,17 +8,19 @@ import { Machine } from "./";
 @Resolver((returns: void) => Machine)
 export class MachineResolver {
   @Authorized()
-  @Query((returns: void) => [Machine])
+  @Query((returns: void) => [Machine], { complexity: 50 })
   public async nearbyMachines(
     @Arg("latitude") latitude: number,
     @Arg("longitude") longitude: number,
-    @Arg("radius") radius: number
+    @Arg("radius", {
+      defaultValue: 5000,
+      description: "Radius, in meters, to look for machines."
+    }) radius: number
   ): Promise<Machine[]> {
-    // SELECT id,latitude,longitude,title FROM requests WHERE earth_box(ll_to_earth(40.689266, -74.044512), 5558) @> ll_to_earth(requests.latitude, requests.longitude);
     // NOTE: Can use regular sql with lateral join to add distance
-    return Machine.createQueryBuilder()
+    return Machine.createQueryBuilder("machine")
       .where(
-        "earth_box(ll_to_earth(machine.latitude, machine.longitude), :radius) @> ll_to_earth(:latitude, :longitude)",
+        "earth_box(ll_to_earth(:latitude, :longitude), sec_to_gc(:radius)) @> ll_to_earth(machine.latitude, machine.longitude)",
         { latitude, longitude, radius }
       ).getMany();
   }
