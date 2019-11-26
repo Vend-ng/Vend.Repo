@@ -1,6 +1,7 @@
-
+import csprng from "csprng";
 import {
   BaseEntity,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -76,4 +77,23 @@ export class Order extends BaseEntity {
   @Field()
   @Column()
   public code: string;
+
+  @BeforeInsert()
+  public async createCode() {
+    const machine = await this.machine;
+    // Between 4 digits and 5 digit, bit length for 36 radix
+    // 20.67 < (bits = 20) < 25.85
+    let bits = 20;
+    let radix = 36;
+    if (!machine.supportsLetters) {
+      // Between 4 and 5 digits (strictly less than 5) for 10 radix
+      // 13.288 < x < (bits = 13) < 16.610
+      bits = 13;
+      radix = 10;
+    }
+    // This could be arguably weak if the probabilties of higher values aren't equal
+    // Since we are limited by a string length, not bit length we need to truncate at decimal bit lengths
+    // This means some higher values will never be generated, reducing the search space
+    this.code = csprng(bits, radix);
+  }
 }
