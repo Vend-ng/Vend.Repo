@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -31,6 +32,7 @@ import { User } from '../User';
  */
 @ObjectType()
 @Entity()
+@Index("ORDER_CODE_UNIQUE_IF_NOT_FINISHED", { synchronize: false })
 export class Order extends BaseEntity {
   @Field((returns: void) => ID)
   @PrimaryGeneratedColumn("uuid")
