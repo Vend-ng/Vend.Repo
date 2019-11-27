@@ -1,3 +1,4 @@
+import stripe from "stripe";
 import {
   Arg,
   Authorized,
@@ -11,13 +12,10 @@ import {
 import { getRepository, Repository } from "typeorm";
 // import { Lazy } from "../../lib/helpers";
 import { IContext } from "../../lib/interfaces";
+import { config } from "../../config";
 // import { Permission } from "../Permission";
 import { Product } from "../Product";
 import { User } from "./entity";
-// import { UserCreateInput, UserDeletePayload, UserUpdateInput } from "./input";
-
-// const resource = User;
-// type resourceType = User;
 
 /**
  * UserResolver for graphql
@@ -80,6 +78,25 @@ export class UserResolver {
 
     // Since favorites are lazy loaded we can use the old user object
     return user.favorites;
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  public async setPaymentSource(
+    @Ctx() context: IContext,
+    @Arg("token", { description: "Stripe payment token." }
+  ) source: string): Promise<boolean> {
+    const user = context.state.user;
+    if (!user) {
+      return false;
+    }
+    const stripeApp = new stripe(config.STRIPE_PRIVATE_TOKEN);
+    const customer = await stripeApp.customers.create({
+      source
+    });
+    await User.update(user.id, { customerId: customer.id });
+
+    return true;
   }
 
   @Query((returns: void) => User, { name: `me`, nullable: true })
