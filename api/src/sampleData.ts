@@ -1,5 +1,6 @@
 import { Connection, createConnection, getConnection } from "typeorm";
 
+import { Application } from "./resources/Application";
 import { Item } from "./resources/Item";
 import { Machine } from "./resources/Machine";
 import { MachineProduct } from "./resources/MachineProduct";
@@ -25,6 +26,12 @@ export async function populate() {
     sub: "1234567890123456"
   }).save();
 
+  let vendingApplication = new Application();
+  vendingApplication.user = vendingUser;
+  vendingApplication.name = "Test Vending Machine";
+  vendingApplication = await vendingApplication.save();
+  console.log('test app key="' + vendingApplication.token + '"');
+
   const sampleItem = await itemRepo.create({
     brand: "Sample Brand",
     gtin: "98739501946271",
@@ -40,8 +47,10 @@ export async function populate() {
   }).save();
 
   const sampleMachine = await machineRepo.create({
-    locationDescription: "Anywhere you want",
     // BUG: with giving owners
+    latitude: 37.951500,
+    locationDescription: "Rolla",
+    longitude: -91.772550,
     owners: [],
     shortName: "Sample"
   }).save();

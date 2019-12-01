@@ -10,6 +10,8 @@ import "./lib/products";
 import { app } from "./app";
 import { authChecker } from "./lib/auth";
 
+import { populate } from "./sampleData";
+
 import { ParameterizedContext as KoaContext } from "koa";
 
 // register 3rd party IOC container
@@ -32,6 +34,8 @@ async function bootstrap() {
       container: Container,
       resolvers: [`${__dirname}/**/resolver.ts`, `${__dirname}/**/resolver.js`]
     });
+
+    await populate();
 
     // create mocked context
     // Create GraphQL server

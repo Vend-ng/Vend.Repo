@@ -8,16 +8,16 @@ module.exports = {
   password: process.env.DB_PASSWORD || "vending",
   database: process.env.DB_TABLE || "vending",
   port: process.env.DB_PORT || 5432,
-  logging: ["error", "warning"],
+  logging: true,
   logger: "advanced-console",
   cache: true,
   // See src/main.ts as to why these are all false
   // Should we automatically synchronize our database?
   synchronize: true,
   // Run migrations automatically,
-  migrationsRun: false,
+  migrationsRun: true,
   // Should we automatically drop the entire database on start?
-  dropSchema: false,
+  dropSchema: true,
   entities: [`${ROOT_DIR}/resources/**/index{.js,.ts}`],
   migrations: [`${ROOT_DIR}/migrations/**/*{.js,.ts}`],
   subscribers: [`${ROOT_DIR}/subscribers/**/*{.js.ts}`],
