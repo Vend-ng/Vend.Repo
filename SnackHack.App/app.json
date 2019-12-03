@@ -28,6 +28,7 @@
     },
     "android": {
       "package": "tech.snackhack.SnackHack"
-    }
+    },
+    "description": ""
   }
 }
