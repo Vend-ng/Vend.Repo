@@ -1,6 +1,6 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { IContext } from "../../lib/interfaces";
-import { Machine } from "./";
+import { Machine, MachineCreateInput } from "./";
 
 /**
  * MachineResolver for machines
@@ -27,10 +27,13 @@ export class MachineResolver {
 
   @Authorized("create:machine")
   @Mutation((returns: void) => Machine)
-  public async createMachine(@Arg("shortName") shortName: string, @Ctx() context: IContext) {
-    const machine = new Machine();
-    machine.shortName = shortName;
-    machine.locationDescription = "";
+  public async createMachine(@Arg("machine") machineInput: MachineCreateInput, @Ctx() context: IContext) {
+    const user = context.state.user;
+    if (user === undefined) {
+      return undefined;
+    }
+    const machine = Machine.create(machineInput);
+    machine.owners = [user];
 
     return machine.save();
   }
