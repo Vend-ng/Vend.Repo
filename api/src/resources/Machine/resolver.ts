@@ -1,5 +1,5 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from "type-graphql";
-import { IContext } from "../../lib/interfaces";
+import { IContext, PaginateInput } from "../../lib/interfaces";
 import { Machine, MachineCreateInput } from "./";
 
 /**
@@ -15,14 +15,19 @@ export class MachineResolver {
     @Arg("radius", {
       defaultValue: 5000,
       description: "Radius, in meters, to look for machines."
-    }) radius: number
+    }) radius: number,
+    @Arg("pagination") pagination: PaginateInput
   ): Promise<Machine[]> {
-    // NOTE: Can use regular sql with lateral join to add distance
+    // NOTE: Can use regular sql with lateral join to add distance or an extra select
+    // If so, might be useful to add sorting, and limit, and skip
     return Machine.createQueryBuilder("machine")
       .where(
         "earth_box(ll_to_earth(:latitude, :longitude), sec_to_gc(:radius)) @> ll_to_earth(machine.latitude, machine.longitude)",
         { latitude, longitude, radius }
-      ).getMany();
+      )
+      .skip(pagination.offset)
+      .take(pagination.limit)
+      .getMany();
   }
 
   @Authorized("create:machine")
