@@ -32,34 +32,100 @@ export async function populate() {
   vendingApplication = await vendingApplication.save();
   console.log('test app key="' + vendingApplication.token + '"');
 
-  const sampleItem = await itemRepo.create({
-    brand: "Sample Brand",
-    gtin: "98739501946271",
-    name: "Sample Item"
+  // Demo items added by Evan 12-3-19
+  const cocaCola = await itemRepo.create({
+    brand: "Coca-Cola",
+    gtin: "89411670423598",
+    name: "Coca-Cola Classic Bottle 20 fl oz."
   }).save();
 
-  const sampleProduct = await productRepo.create({
-    displayName: "Sample Product",
-    item: sampleItem,
+   const drPepper = await itemRepo.create({
+    brand: "Keurig Dr Pepper",
+    gtin: "69080344246615",
+    name: "Dr Pepper Bottle 20 fl oz."
+  }).save();
+
+  const sprite = await itemRepo.create({
+    brand: "Coca-Cola",
+    gtin: "975070107388724",
+    name: "Sprite Bottle 20 fl oz."
+  }).save();
+
+  const dietCoke = await itemRepo.create({
+    brand: "Coca-Cola",
+    gtin: "975070107388724",
+    name: "Diet Coke Bottle 20 fl oz."
+  }).save();
+  // ----- //
+
+  // Products for demo Items
+  const cocaColaProduct = await productRepo.create({
+    displayName: "Coca-Cola Classic 20 fl oz.",
+    item: cocaCola,
     owners: [vendingUser],
     price: 1.5,
-    statementDescriptor: "sample product"
+    statementDescriptor: "Coca-Cola 20 oz"
   }).save();
 
-  const sampleMachine = await machineRepo.create({
+  const drPepperProduct = await productRepo.create({
+    displayName: "Dr Pepper 20 fl oz.",
+    item: drPepper,
+    owners: [vendingUser],
+    price: 1.5,
+    statementDescriptor: "Dr Pepper 20 oz"
+  }).save();
+
+  const spriteProduct = await productRepo.create({
+    displayName: "Sprite 20 fl oz.",
+    item: sprite,
+    owners: [vendingUser],
+    price: 1.5,
+    statementDescriptor: "Sprite 20 oz"
+  }).save();
+
+  const dietCokeProduct = await productRepo.create({
+    displayName: "Diet Coke 20 fl oz.",
+    item: dietCoke,
+    owners: [vendingUser],
+    price: 1.5,
+    statementDescriptor: "Diet Coke 20 oz"
+  }).save();
+  // ---- //
+
+  const sampleMachine1 = await machineRepo.create({
     // BUG: with giving owners
     latitude: 37.951500,
     locationDescription: "Rolla",
     longitude: -91.772550,
-    owners: [],
-    shortName: "Sample"
+    owners: [], 
+    shortName: "MST BCH 01"
+  }).save();
+
+  // Adding Demo Items to Sample Machine
+  await machineProductRepo.create({
+    machine: sampleMachine1,
+    product: cocaColaProduct,
+    quantity: 10
   }).save();
 
   await machineProductRepo.create({
-    machine: sampleMachine,
-    product: sampleProduct,
+    machine: sampleMachine1,
+    product: drPepperProduct,
     quantity: 10
   }).save();
+
+  await machineProductRepo.create({
+    machine: sampleMachine1,
+    product: spriteProduct,
+    quantity: 10
+  }).save();
+
+  await machineProductRepo.create({
+    machine: sampleMachine1,
+    product: dietCokeProduct,
+    quantity: 10
+  }).save();
+  //
 }
 
 if (require !== undefined && require.main === module) {
