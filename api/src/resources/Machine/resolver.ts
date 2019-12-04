@@ -20,7 +20,7 @@ export class MachineResolver {
       defaultValue: 5000,
       description: "Radius, in meters, to look for machines."
     }) radius: number,
-    @Args(() => PaginateInput, { validate: true }) { offset, limit }: PaginateInput
+    @Args(() => PaginateInput, { validate: true }) { skip, take }: PaginateInput
   ): Promise<Machine[]> {
     // NOTE: Can use regular sql with lateral join to add distance or an extra select
     // If so, might be useful to add sorting, and limit, and skip
@@ -29,8 +29,8 @@ export class MachineResolver {
         "earth_box(ll_to_earth(:latitude, :longitude), sec_to_gc(:radius)) @> ll_to_earth(machine.latitude, machine.longitude)",
         { latitude, longitude, radius }
       )
-      .skip(offset)
-      .take(limit)
+      .skip(skip)
+      .take(take)
       .getMany();
   }
 

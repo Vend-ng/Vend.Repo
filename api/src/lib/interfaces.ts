@@ -37,12 +37,12 @@ export class PaginateInput {
   })
   @Min(0)
   @Max(100)
-  public limit?: number;
+  public take?: number;
 
   @Field(() => Int, {
     defaultValue: 0,
     description: "The index or starting point to being taking results."
   })
   @Min(0)
-  public offset?: number;
+  public skip?: number;
 }

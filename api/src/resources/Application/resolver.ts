@@ -10,11 +10,11 @@ export class ApplicationResolver {
   @Authorized("application:view")
   @Query(() => [Application], { description: "Get all applications." })
   public async applications(
-    @Args(() => PaginateInput, { validate: true }) { offset, limit }: PaginateInput
+    @Args(() => PaginateInput, { validate: true }) { skip, take }: PaginateInput
   ): Promise<Application[]> {
-    return Application.createQueryBuilder("application")
-      .skip(offset)
-      .take(limit)
-      .getMany();
+    return Application.find({
+      skip,
+      take
+    })
   }
 }

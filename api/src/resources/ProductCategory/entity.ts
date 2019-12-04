@@ -19,6 +19,7 @@ export class ProductCategory extends BaseEntity {
   @Column({ nullable: true })
   public description: string;
 
+  @Field(() => [Product])
   @ManyToMany(() => Product, (product: Product) => product.categories, {
     lazy: true
   })

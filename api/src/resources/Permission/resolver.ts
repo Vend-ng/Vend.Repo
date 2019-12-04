@@ -1,4 +1,4 @@
-import { Arg, Authorized, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Args, Authorized, Mutation, Query, Resolver } from "type-graphql";
 import { PaginateInput } from "../../lib/interfaces";
 import { Permission } from "./entity";
 import { PermissionCreateInput } from "./input";
@@ -11,12 +11,12 @@ export class PermissionResolver {
   @Authorized("SUPERADMIN")
   @Query(() => [Permission], { description: "Get all permissions." })
   public async permissions(
-    @Arg("pagination", () => PaginateInput) pagination: PaginateInput
+    @Args(() => PaginateInput, { validate: true }) { skip, take }: PaginateInput
   ): Promise<Permission[]> {
-    return Permission.createQueryBuilder()
-      .skip(pagination.offset)
-      .take(pagination.limit)
-      .getMany();
+    return Permission.find({
+      skip,
+      take
+    })
   }
 
   @Authorized("SUPERADMIN")

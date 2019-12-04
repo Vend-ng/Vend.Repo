@@ -1,5 +1,6 @@
 import {
   Arg,
+  Args,
   Authorized,
   Ctx,
   Mutation,
@@ -9,7 +10,7 @@ import {
 import { getRepository, Repository } from "typeorm";
 // import { Lazy } from "../../lib/helpers";
 
-import { IContext } from "../../lib/interfaces";
+import { IContext, PaginateInput } from "../../lib/interfaces";
 import { Machine } from "../Machine";
 import { Product } from "../Product";
 import { Order } from "./entity";
@@ -51,7 +52,8 @@ export class OrderResolver {
   @Authorized("order:view:pending")
   @Query(() => [Order], { description: "Get incomplete orders." })
   public async getPendingOrders(
-    @Ctx() context: IContext
+    @Ctx() context: IContext,
+    @Args(() => PaginateInput, { validate: true }) { skip, take }: PaginateInput
   ) {
     const user = context.state.user;
     if (user === undefined) {
@@ -62,13 +64,16 @@ export class OrderResolver {
       .where("order.user = :userId", { userId: user.id })
       .andWhere("order.finished = false")
       .andWhere("expires > :currentDatetime", { currentDatetime: new Date() })
+      .skip(skip)
+      .take(take)
       .getMany();
   }
 
   @Authorized("order:view:completed")
   @Query(() => [Order], { description: "Get completed orders." })
   public async getCompletedOrders(
-    @Ctx() context: IContext
+    @Ctx() context: IContext,
+    @Args(() => PaginateInput, { validate: true }) { skip, take }: PaginateInput
   ) {
     const user = context.state.user;
     if (user === undefined) {
@@ -78,6 +83,28 @@ export class OrderResolver {
     return Order.createQueryBuilder("order")
       .where("order.user = :userId", { userId: user.id })
       .andWhere("order.finished = true")
+      .skip(skip)
+      .take(take)
       .getMany();
+  }
+
+  // NOTE: Needs rate limitting to prevent spamming codes until correct
+  @Authorized("order:complete")
+  @Mutation(() => Order, { description: "Complete an order with an order code." })
+  public async completeOrder(
+    @Arg("orderCode") orderCode: string,
+    @Arg("machine") machineId: string,
+    @Ctx() context: IContext
+  ) {
+    // TODO: Get machine from the current state if application is a machine instead
+    return Order.createQueryBuilder()
+      .relation("machine")
+      .of(machineId)
+      .select("order")
+      .where("order.finished = FALSE")
+      .andWhere("code = :orderCode", { orderCode }).getOne();
+    // const stripeCode = order.orderId;
+    // TODO: Check stripe order status
+    // return order;
   }
 }
