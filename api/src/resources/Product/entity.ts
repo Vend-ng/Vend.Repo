@@ -25,22 +25,20 @@ import { User } from "../User";
 @ObjectType()
 @Entity()
 export class Product extends BaseEntity {
-  @Field((returns: void) => ID)
+  @Field(() => ID)
   @PrimaryGeneratedColumn("uuid")
   public readonly id: string;
 
-  @Field((returns: void) => Item)
-  @ManyToOne((returns: void) => Item, (item: Item) => item.products, {
+  @Field(() => Item)
+  @ManyToOne(() => Item, (item: Item) => item.products, {
     lazy: true
   })
   @JoinTable()
   public item: Lazy<Item>;
 
-  @ManyToMany(
-    (returns: void) => User,
-    (user: User) => user.productsOwned,
-    { lazy: true }
-  )
+  @ManyToMany(() => User, (user: User) => user.productsOwned, {
+    lazy: true
+  })
   public owners: Lazy<User[]>;
 
   @Field({ nullable: true })
@@ -51,10 +49,7 @@ export class Product extends BaseEntity {
   @Column({ nullable: true })
   public description?: string;
 
-  @OneToMany(
-    (returns: void) => MachineProduct,
-    (machineProduct: MachineProduct) => machineProduct.product
-  )
+  @OneToMany(() => MachineProduct, (machineProduct: MachineProduct) => machineProduct.product)
   public machineProducts: MachineProduct[];
 
   // Only allow 17 characters as statementDescriptor is 22 characters max on
@@ -66,37 +61,28 @@ export class Product extends BaseEntity {
   @UpdateDateColumn()
   public readonly updatedDate: Date;
 
-  @Field((returns: void) => String)
+  @Field(() => String)
   @Column("money")
   public price: number;
 
-  @ManyToMany(
-    (order: void) => Order,
-    (order: Order) => order.products, {
-      lazy: true,
-      onDelete: "RESTRICT"
-    }
-  )
+  @ManyToMany(() => Order, (order: Order) => order.products, {
+    lazy: true,
+    onDelete: "RESTRICT"
+  })
   public purchases: Lazy<Order[]>;
 
-  @Field((returns: void) => [ProductCategory], { defaultValue: [] })
-  @ManyToMany(
-    (category: void) => ProductCategory,
-    (category: ProductCategory) => category.products, {
-      cascade: true,
-      lazy: true
-    }
-  )
+  @Field(() => [ProductCategory], { defaultValue: [] })
+  @ManyToMany(() => ProductCategory, (category: ProductCategory) => category.products, {
+    cascade: true,
+    lazy: true
+  })
   @JoinTable()
   public categories: Lazy<ProductCategory[]>;
 
-  @Field((returns: void) => [User], { defaultValue: [] })
-  @ManyToMany(
-    (returns: void) => User,
-    (user: User) => user.favorites, {
-      cascade: true,
-      lazy: true
-    }
-  )
+  @Field(() => [User], { defaultValue: [] })
+  @ManyToMany(() => User, (user: User) => user.favorites, {
+    cascade: true,
+    lazy: true
+  })
   public favoritedBy: Lazy<User[]>;
 }

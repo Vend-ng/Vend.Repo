@@ -14,12 +14,18 @@ registerEnumType(ErrorCodes, {
   name: "ErrorCodes"
 });
 
+/**
+ * ExtensionType
+ */
 @ObjectType()
 export class Extension {
-  @Field((returns: void) => ErrorCodes)
+  @Field(() => ErrorCodes)
   public code: ErrorCodes;
 }
 
+/**
+ * NotFoundError
+ */
 export class NotFoundError extends ApolloError {
   constructor(id: number | string) {
     super(
@@ -29,6 +35,9 @@ export class NotFoundError extends ApolloError {
   }
 }
 
+/**
+ * BadUserInputError
+ */
 export class BadUserInputError extends ApolloError {
   constructor(message: string) {
     super(message, ErrorCodes.BAD_USER_INPUT);

@@ -14,10 +14,10 @@ import { Product } from "../Product";
 /**
  * Item, base for a product
  */
-@ObjectType()
+@ObjectType({ description: "Globally recognizable item, operates on GTIN." })
 @Entity()
 export class Item extends BaseEntity {
-  @OneToMany((returns: void) => Product, (product: Product) => product.item, {
+  @OneToMany(() => Product, (product: Product) => product.item, {
     lazy: true,
     onDelete: "RESTRICT"
   })
@@ -27,7 +27,7 @@ export class Item extends BaseEntity {
   @Column()
   public name: string;
 
-  @Field((returns: void) => ID)
+  @Field(() => ID)
   @PrimaryColumn('varchar', { length: 14 })
   public gtin: string;
 

@@ -24,7 +24,7 @@ import { Field, ID, ObjectType } from 'type-graphql';
 // Disable synchronizing index
 @Index("MACHINE_EARTH_LOC_INDEX", { synchronize: false })
 export class Machine extends BaseEntity {
-  @Field((returns: void) => ID)
+  @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')
   public readonly id: string;
 
@@ -32,48 +32,38 @@ export class Machine extends BaseEntity {
   @Column()
   public shortName: string;
 
-  @Field((returns: void) => [User], { defaultValue: [] })
-  @ManyToMany(
-    (returns: void) => User,
-    (user: User) => user.machinesOwned,
-    {
-      lazy: true
-    }
-  )
+  @Field(() => [User], { defaultValue: [] })
+  @ManyToMany(() => User, (user: User) => user.machinesOwned, {
+    lazy: true
+  })
   @JoinTable()
   public owners: Lazy<User[]>;
 
-  // A text hint to describe the machines location
-  @Field()
+  @Field({ description: "A text hint to describe the machine's location." })
   @Column()
   public locationDescription: string;
 
   @Field()
-  @Column({type: "float8"})
+  @Column({ type: "float8" })
   public latitude: number;
 
   @Field()
   @Column({type: "float8"})
   public longitude: number;
 
+  @Field({ description: "Whether the machine supports letter input." })
   @Column({ default: false })
   public supportsLetters: boolean;
 
-  @Field((returns: void) => [MachineProduct], { defaultValue: [] })
-  @OneToMany(
-    (returns: void) => MachineProduct,
-    (machineProduct: MachineProduct) => machineProduct.product,
-    {
-      lazy: true
-    }
-  )
+  @Field(() => [MachineProduct], { defaultValue: [] })
+  @OneToMany(() => MachineProduct, (machineProduct: MachineProduct) => machineProduct.product, {
+    lazy: true
+  })
   public products: Lazy<MachineProduct[]>;
 
-  @Field((returns: void) => Order)
-  @OneToMany(
-    (returns: void) => Order,
-    (order: Order) => order.machine,
-    { lazy: true }
-  )
+  @Field(() => Order)
+  @OneToMany(() => Order, (order: Order) => order.machine, {
+    lazy: true
+  })
   public orders: Lazy<Order[]>;
 }

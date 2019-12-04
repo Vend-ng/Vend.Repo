@@ -1,29 +1,31 @@
 import { Arg, Authorized, Mutation, Query, Resolver } from "type-graphql";
-import { DeepPartial, getRepository, Repository } from "typeorm";
+import { PaginateInput } from "../../lib/interfaces";
 import { Permission } from "./entity";
 import { PermissionCreateInput } from "./input";
 
 /**
  * Permissions resolver for graphql
  */
-@Resolver((returns: void) => Permission)
+@Resolver(() => Permission)
 export class PermissionResolver {
-  public repository: Repository<Permission> = getRepository(Permission);
-
   @Authorized("SUPERADMIN")
-  @Query((returns: void) => [Permission])
-  public async permissions(): Promise<Permission[]> {
-    return this.repository.find();
+  @Query(() => [Permission], { description: "Get all permissions." })
+  public async permissions(
+    @Arg("pagination", () => PaginateInput) pagination: PaginateInput
+  ): Promise<Permission[]> {
+    return Permission.createQueryBuilder()
+      .skip(pagination.offset)
+      .take(pagination.limit)
+      .getMany();
   }
 
   @Authorized("SUPERADMIN")
-  @Mutation((returns: void) => Permission)
+  @Mutation(() => Permission, { description: "Create a new permission." })
   public async createPermission(
-    @Arg("data", (argType: void) => PermissionCreateInput)
-    input: DeepPartial<Permission>
+    @Arg("data", () => PermissionCreateInput) input: PermissionCreateInput
   ): Promise<Permission> {
-    const newResource = this.repository.create({ ...input });
+    const permission = Permission.create(input);
 
-    return newResource.save();
+    return permission.save();
   }
 }

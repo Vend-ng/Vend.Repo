@@ -25,12 +25,12 @@ import { Product } from '../Product';
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
-  @Field((returns: void) => ID)
+  @Field(() => ID)
   @PrimaryGeneratedColumn("uuid")
   public readonly id: string;
 
   // Google subject id
-  @Field((returns: void) => String)
+  @Field(() => String)
   @Index({ unique: true })
   @Column()
   public sub: string;
@@ -72,21 +72,16 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   public readonly lastUpdated: Date;
 
-  @Field((returns: void) => [Permission], { nullable: true })
+  @Field(() => [Permission], { nullable: true })
   @JoinTable()
-  @ManyToMany(
-    (returns: void) => Permission,
-    (permission: Permission) => permission.users,
-    { lazy: true }
-  )
+  @ManyToMany(() => Permission, (permission: Permission) => permission.users, {
+    lazy: true
+  })
   public permissions: Lazy<Permission[]>;
 
-  @ManyToMany(
-    (returns: void) => Group,
-    (group: Group) => group.users, {
-      lazy: true
-    }
-  )
+  @ManyToMany(() => Group, (group: Group) => group.users, {
+    lazy: true
+  })
   @JoinTable()
   public groups: Lazy<Group[]>;
 
@@ -94,56 +89,37 @@ export class User extends BaseEntity {
   @Index({ unique: true })
   public customerId?: string;
 
-  @Field((returns: void) => [Order], { nullable: true })
-  @OneToMany(
-    (returns: void) => Order,
-    (order: Order) => order.user,
-    {
-      lazy: true
-    }
-  )
+  @Field(() => [Order], { nullable: true })
+  @OneToMany(() => Order, (order: Order) => order.user, {
+    lazy: true
+  })
   @JoinTable()
   public orders: Lazy<Order[]>;
 
-  @Field((returns: void) => [Machine], { nullable: true })
-  @ManyToMany(
-    (returns: void) => Machine,
-    (machine: Machine) => machine.owners,
-    {
-      lazy: true
-    }
-  )
+  @Field(() => [Machine], { nullable: true })
+  @ManyToMany(() => Machine, (machine: Machine) => machine.owners, {
+    lazy: true
+  })
   @JoinTable()
   public machinesOwned: Lazy<Machine[]>;
 
-  @Field((returns: void) => [Product], { nullable: true })
-  @ManyToMany(
-    (returns: void) => Product,
-    (product: Product) => product.owners,
-    {
-      lazy: true
-    }
-  )
+  @Field(() => [Product], { nullable: true })
+  @ManyToMany(() => Product, (product: Product) => product.owners, {
+    lazy: true
+  })
   @JoinTable()
   public productsOwned: Lazy<Product[]>;
 
-  @Field((returns: void) => [Product], { defaultValue: [] })
-  @ManyToMany(
-    (category: void) => Product,
-    (product: Product) => product.favoritedBy, {
-      lazy: true
-    }
-  )
+  @Field(() => [Product], { defaultValue: [] })
+  @ManyToMany(() => Product, (product: Product) => product.favoritedBy, {
+    lazy: true
+  })
   @JoinTable()
   public favorites: Lazy<Product[]>;
 
-  @OneToMany(
-    () => Application,
-    (application: Application) => application.user,
-    {
-      lazy: true
-    }
-  )
+  @OneToMany(() => Application, (application: Application) => application.user, {
+    lazy: true
+  })
   @JoinTable()
   public applications: Lazy<Application[]>;
 }
