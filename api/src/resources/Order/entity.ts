@@ -34,12 +34,12 @@ import { User } from '../User';
 @Entity()
 @Index("ORDER_CODE_UNIQUE_IF_NOT_FINISHED", { synchronize: false })
 export class Order extends BaseEntity {
-  @Field((returns: void) => ID)
+  @Field(() => ID)
   @PrimaryGeneratedColumn("uuid")
   public id: string;
 
-  @Field((returns: void) => User)
-  @ManyToOne((returns: void) => User, (user: User) => user.orders, {
+  @Field(() => User)
+  @ManyToOne(() => User, (user: User) => user.orders, {
     lazy: true
   })
   public user: Lazy<User>;
@@ -47,21 +47,17 @@ export class Order extends BaseEntity {
   @Column({ unique: true })
   public orderId: string;
 
-  @Field((returns: void) => [Product])
-  @ManyToMany(
-    (returns: void) => Product,
-    (product: Product) => product.purchases,
-    { lazy: true }
-  )
+  @Field(() => [Product])
+  @ManyToMany(() => Product, (product: Product) => product.purchases, {
+    lazy: true
+  })
   @JoinTable()
   public products: Lazy<Product[]>;
 
-  @Field((returns: void) => Machine)
-  @ManyToOne(
-    (returns: void) => Machine,
-    (machine: Machine) => machine.orders,
-    { lazy: true }
-  )
+  @Field(() => Machine)
+  @ManyToOne(() => Machine, (machine: Machine) => machine.orders, {
+    lazy: true
+  })
   public machine: Lazy<Machine>;
 
   @Field()

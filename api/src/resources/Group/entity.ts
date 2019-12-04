@@ -1,4 +1,9 @@
 import {
+  Authorized,
+  Field,
+  ObjectType
+} from "type-graphql";
+import {
   BaseEntity,
   Entity,
   JoinTable,
@@ -13,25 +18,24 @@ import { User } from "../User";
  * Group for users to belong to to generalize permissions
  */
 @Entity()
+@ObjectType({ description: "Groups for users to participate in." })
 export class Group extends BaseEntity {
+  @Field()
   @PrimaryColumn()
   public name: string;
 
-  @ManyToMany(
-    (group: void) => User,
-    (user: User) => user.groups, {
-      lazy: true
-    }
-  )
-  public users: User;
+  @Authorized("groups:view_users")
+  @Field(() => [User], { description: "Users in this group." })
+  @ManyToMany(() => User, (user: User) => user.groups, {
+    lazy: true
+  })
+  public users: User[];
 
-  @ManyToMany(
-    (returns: void) => Permission,
-    (permission: Permission) => permission.groups, {
-      lazy: true,
-      onDelete: "RESTRICT"
-    }
-  )
+  @Field(() => [Permission], { description: "Permissions a group grants." })
+  @ManyToMany(() => Permission, (permission: Permission) => permission.groups, {
+    lazy: true,
+    onDelete: "RESTRICT"
+  })
   @JoinTable()
   public permissions: Lazy<Permission[]>;
 }

@@ -2,7 +2,7 @@ import { Field, InputType } from "type-graphql";
 
 @InputType()
 export class CreateOrderInput {
-  @Field((returns: void) => [String])
+  @Field(() => [String])
   public productIds: string[];
 
   @Field()
