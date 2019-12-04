@@ -7,7 +7,7 @@ import { MachineProduct } from "./resources/MachineProduct";
 import { Product } from "./resources/Product";
 import { User } from "./resources/User";
 
-
+/* tslint:disable:max-func-boxy-length */
 export async function populate() {
   const connection = getConnection();
 
@@ -26,11 +26,11 @@ export async function populate() {
     sub: "1234567890123456"
   }).save();
 
-  let vendingApplication = new Application();
-  vendingApplication.user = vendingUser;
-  vendingApplication.name = "Test Vending Machine";
-  vendingApplication = await vendingApplication.save();
-  console.log('test app key="' + vendingApplication.token + '"');
+  const vendingApplication = await Application.create({
+    name: "Test Vending Machine",
+    user: vendingUser
+  }).save();
+  console.log('TEST APP KEY="' + vendingApplication.token + '"');
 
   // Demo items added by Evan 12-3-19
   const cocaCola = await itemRepo.create({
@@ -47,13 +47,13 @@ export async function populate() {
 
   const sprite = await itemRepo.create({
     brand: "Coca-Cola",
-    gtin: "975070107388724",
+    gtin: "97507010738872",
     name: "Sprite Bottle 20 fl oz."
   }).save();
 
   const dietCoke = await itemRepo.create({
     brand: "Coca-Cola",
-    gtin: "975070107388724",
+    gtin: "42003992990092",
     name: "Diet Coke Bottle 20 fl oz."
   }).save();
   // ----- //
@@ -97,7 +97,7 @@ export async function populate() {
     latitude: 37.951500,
     locationDescription: "Rolla",
     longitude: -91.772550,
-    owners: [], 
+    owners: [],
     shortName: "MST BCH 01"
   }).save();
 
