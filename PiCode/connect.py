@@ -13,7 +13,7 @@
 
 import json
 import requests
-
+from gpio import gpiozero
 
 class Query:
     def __init__(url, key, mid):
@@ -31,6 +31,9 @@ def getNearbyMachines(radius, lat, long):
 
     return q_string
 
+led = LED(17)
+led2 = LED(22)
+led3 = LED(27)
 
 rad = 500
 coords = ('37.951759', '-91.776447')
@@ -47,6 +50,9 @@ headers = {'Authorization': 'Bearer 23e3a7d5-4a35-4e8a-afec-9bb1056d5b41'}
 
 r = requests.post(url=url, json=json, headers=headers)
 
+if r not none:
+    led.on()
+    
 data = r.json()['data']
 
 machine = data['nearbyMachines']  
