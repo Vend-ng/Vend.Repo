@@ -7,7 +7,6 @@ import {
   Query,
   Resolver
 } from "type-graphql";
-import { getRepository, Repository } from "typeorm";
 // import { Lazy } from "../../lib/helpers";
 
 import { IContext, PaginateInput } from "../../lib/interfaces";
@@ -24,26 +23,23 @@ import { CreateOrderInput } from "./input";
  */
 @Resolver(() => Order)
 export class OrderResolver {
-  private orderRepo: Repository<Order> = getRepository(Order);
-  private machineRepo: Repository<Machine> = getRepository(Machine);
-  private productRepo: Repository<Product> = getRepository(Product);
-
   @Authorized("order:create")
   @Mutation(() => Order, { description: "Create a new order" })
   public async placeOrder(
     @Arg("order") orderData: CreateOrderInput,
     @Ctx() context: IContext
   ) {
+    const user = context.state.user!;
     const stripeOrderId = `test ${Math.floor(Math.random() * 9999).toString()}`;
-    const machine = await this.machineRepo.findOneOrFail({id: orderData.machineId});
-    const products = await this.productRepo.findByIds(orderData.productIds);
-    const order = this.orderRepo.create({
+    const machine = await Machine.findOneOrFail({id: orderData.machineId});
+    const products = await Product.findByIds(orderData.productIds);
+    const order = Order.create({
       // Defaults 2 hours in the future
       expires: orderData.expiration || new Date(Date.now() + 7200000),
       machine,
       orderId: stripeOrderId,
       products,
-      user: context.state.user
+      user
     });
 
     return order.save();
