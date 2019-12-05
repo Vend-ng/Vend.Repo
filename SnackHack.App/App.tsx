@@ -12,18 +12,19 @@ import LocationScreen from './screens/LocationScreen';
 import FavoritesScreen from './screens/FavoritesScreen'
 import CartScreen from './screens/CartScreen'
 import GraphqlScreen from './screens/GraphqlScreen'
-
-const TabNavigator = createBottomTabNavigator({
-  Items: {
-    screen: ItemScreen,
-    navigationOptions: {
-      tabBarIcon: ({ tintColor }) => (
-        <Image source={require('./assets/items-icon.png')} style={{width: 42/3, height: 74/3}} />
-      )
-    }
-  },
-  Locations: {
+console.disableYellowBox = true;
+const StackNavigation = createStackNavigator({
+  Locations: { 
     screen: LocationScreen,
+    navigationOptions: {
+      header: null
+    } 
+  },
+  Items: { screen: ItemScreen }
+});
+const TabNavigator = createBottomTabNavigator({
+  Locations: {
+    screen: StackNavigation,
     navigationOptions: {
       tabBarIcon: ({ tintColor }) => (
         <Image source={require('./assets/location-icon.png')} style={{width: 52/3, height: 73/3}} />

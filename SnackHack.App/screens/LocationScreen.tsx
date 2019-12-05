@@ -6,13 +6,15 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import * as Permissions from 'expo-permissions';
 import { NavigationInjectedProps, withNavigation } from 'react-navigation';
 import * as Animatable from 'react-native-animatable';
+import SHClient from '../libraries/SHClient';
 import App from '../App';
-
+import {createStackNavigator} from 'react-navigation-stack';
 class LocationScreen extends Component<NavigationInjectedProps> {
 
     state = {
         latitude: null,
         longitude: null,
+        markers: []
     }
 
 
@@ -32,23 +34,26 @@ class LocationScreen extends Component<NavigationInjectedProps> {
     
     }
 
-    markerOnPress(){
-        
-        //console.log("Clicked");
-        
-        // <Animatable.View animation = "slideInBottom" duration = {500} style = {{height: 50, backgroundColor: 'white', flexDirection: 'row', padding:5}}>
-            
-        // </Animatable.View> 
-
-    }
-
     render() {
+        const { navigate } = this.props.navigation;
         const { latitude, longitude} = this.state
-        var vendingMachine = {
-            latitude: 37.955389,
-            longitude: -91.772266,
+        var client = new SHClient();
+        if (this.state.markers.length == 0) {
+            //console.log("markers: " + this.state.markers.length);
+            if (latitude)
+                client.nearbyMachines(latitude, longitude, (x, y) => { 
+                    console.log("Pressed!");
+                    navigate('Items', { MachineId: x, MachineShort: y });
+                }).then(t => {
+                    //console.log("latitude " + latitude + " longitude " + longitude);
+                    t.forEach(element => {
+                        //console.log("element: " + element)
+                        this.setState({
+                            markers: [...this.state.markers, element]
+                        })
+                    })
+            });
         }
-
         if(latitude){
             return(
                 <View style = {styles.map}>
@@ -80,12 +85,7 @@ class LocationScreen extends Component<NavigationInjectedProps> {
                         showsCompass
                         showsMyLocationButton
                     >
-                        <Marker 
-                            title = "MST BCH 01"
-                            // pinColor = "#ffffff"
-                            coordinate = {vendingMachine}
-                            onPress = {this.markerOnPress}
-                        />
+                        {this.state.markers}
                     </MapView>
 
                 </View>
