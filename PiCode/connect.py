@@ -14,6 +14,8 @@
 import json
 import requests
 
+KEY = '70327a82-8bd8-483e-9de0-f3607999ceea'
+
 class Query:
     def __init__(url, key, mid):
         self.url = url
@@ -31,9 +33,9 @@ def getNearbyMachines(radius, lat, long):
     return q_string
 
 def completeOrder(mid, orderCode):
-    q_string = '{'
+    q_string = 'mutation {'
     q_string += f"completeOrder(machine: \"{mid}\", orderCode: \"{orderCode}\")"
-    q_string += "{ Order { code, products {id, displayName }    }    }"
+    q_string += "{ Order { products{displayName }    }    }"
     q_string += '}'
 
     return q_string
@@ -47,7 +49,7 @@ coords = ('37.951759', '-91.776447')
 
 url = 'http://snackhack.tech/graphql'
 json = { 'query' : getNearbyMachines(rad, coords[0], coords[1]) }
-headers = {'Authorization': 'Bearer 23e3a7d5-4a35-4e8a-afec-9bb1056d5b41'}
+headers = {'Authorization': f'Bearer {KEY}'}
 
 r = requests.post(url=url, json=json, headers=headers)
 
@@ -61,7 +63,8 @@ print(mid)
 orderCode = input("Enter A Code to Receive a Drink: ")
 
 orderJson = { 'query' : completeOrder(mid, orderCode) }
-orderRequest = requests.post(url=url, json=orderJson, headers=headers)
+header2 = {'Authorization': f'Bearer {KEY}'}
+orderRequest = requests.post(url=url, json=orderJson, headers=header2)
 print(orderRequest.json())
 
 #Process order and show drink(s) purchased
