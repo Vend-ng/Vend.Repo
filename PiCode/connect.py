@@ -35,8 +35,7 @@ def getNearbyMachines(radius, lat, long):
 def completeOrder(mid, orderCode):
     q_string = 'mutation {'
     q_string += f"completeOrder(machine: \"{mid}\", orderCode: \"{orderCode}\")"
-    q_string += "{ Order { products{displayName }    }    }"
-    q_string += '}'
+    q_string += "{ products{displayName }    }    }"
 
     return q_string
 
@@ -57,7 +56,7 @@ data = r.json()['data']
 
 machine = data['nearbyMachines']  
 mid = machine[0]['id']
-print(mid)
+#print(mid)
 
 # Wait on Code from User
 orderCode = input("Enter A Code to Receive a Drink: ")
@@ -65,35 +64,48 @@ orderCode = input("Enter A Code to Receive a Drink: ")
 orderJson = { 'query' : completeOrder(mid, orderCode) }
 header2 = {'Authorization': f'Bearer {KEY}'}
 orderRequest = requests.post(url=url, json=orderJson, headers=header2)
-print(orderRequest.json())
 
-#Process order and show drink(s) purchased
-"""
-from gpiozero import LED
-
-led1 = LED(17) 
-led2 = LED(22)
-led3 = LED(27)
-led4 = LED(?)
+order = orderRequest.json()['data']
+items = order['completeOrder']['products']
 
 
-if drink == DRINK1:
-    led1.on()
-    sleep(5)
-    led1.off()
-elif drink == DRINK2:
-    led2.on()
-    sleep(5)
-    led2.off()
-elif drink == DRINK3:
-    led3.on()
-    sleep(5)
-    led3.off()
-elif drink == DRINK4:
-    led4.on()
-    sleep(5)
-    led4.off()
-"""
+DRINK1 = "Diet Coke 20 fl oz"
+DRINK2 = "Sprite 20 fl oz"
+DRINK3 = "Dr Pepper 20 fl oz"
+DRINK4 = "Coca-Cola Classic 20 fl oz"
+
+
+print("You Purchased")
+for itm in items:
+    print(itm['displayName'])
+    drink = itm['displayName']
+
+    """
+    from gpiozero import LED
+
+    led1 = LED(17) 
+    led2 = LED(22)
+    led3 = LED(27)
+    led4 = LED(?)
+
+
+    if drink == DRINK1:
+        led1.on()
+        sleep(5)
+        led1.off()
+    elif drink == DRINK2:
+        led2.on()
+        sleep(5)
+        led2.off()
+    elif drink == DRINK3:
+        led3.on()
+        sleep(5)
+        led3.off()
+    elif drink == DRINK4:
+        led4.on()
+        sleep(5)
+        led4.off()
+    """
 
 
 
