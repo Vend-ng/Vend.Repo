@@ -1,11 +1,10 @@
 import { Field, InputType } from "type-graphql";
-import { Machine } from "./entity";
 
 /**
  * Input for creating a machine
  */
 @InputType()
-export class MachineCreateInput implements Partial<Machine> {
+export class MachineCreateInput {
   @Field()
   public shortName: string;
 
@@ -14,4 +13,10 @@ export class MachineCreateInput implements Partial<Machine> {
 
   @Field()
   public longitude: number;
+
+  @Field()
+  public locationDescription: string;
+
+  @Field({ defaultValue: false })
+  public supportsLetters?: boolean;
 }

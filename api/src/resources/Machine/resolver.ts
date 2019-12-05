@@ -39,13 +39,15 @@ export class MachineResolver {
   public async createMachine(
     @Arg("machine", () => MachineCreateInput) machineInput: MachineCreateInput,
     @Ctx() context: IContext
-  ) {
-    const user = context.state.user;
-    if (user === undefined) {
-      return undefined;
-    }
+  ): Promise<Machine> {
     await validateOrReject(machineInput);
-    const machine = Machine.create(machineInput);
+    const machine = new Machine();
+    machine.shortName = machineInput.shortName;
+    machine.locationDescription = machineInput.shortName;
+    machine.latitude = machineInput.latitude;
+    machine.longitude = machineInput.longitude;
+
+    const user = context.state.user!;
     machine.owners = [user];
 
     return machine.save();
