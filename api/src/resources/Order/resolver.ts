@@ -99,7 +99,7 @@ export class OrderResolver {
       .andWhere("Order.code = :orderCode", { orderCode }).getOne();
 
     if (order === undefined) {
-      throw new NotFoundError(orderCode);
+      throw new Error("Code not valid.");
     }
     // const stripeCode = order.orderId;
     // TODO: Check stripe order status
