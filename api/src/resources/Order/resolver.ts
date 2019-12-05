@@ -93,14 +93,19 @@ export class OrderResolver {
     @Ctx() context: IContext
   ) {
     // TODO: Get machine from the current state if application is a machine instead
-    return Order.createQueryBuilder()
-      .relation("machine")
-      .of(machineId)
-      .select("order")
-      .where("order.finished = FALSE")
-      .andWhere("code = :orderCode", { orderCode }).getOne();
+    const order = await Order.createQueryBuilder()
+      .where("Order.finished = FALSE")
+      .andWhere('Order."machineId" = :machineId', { machineId })
+      .andWhere("Order.code = :orderCode", { orderCode }).getOne();
+
+    if (order === undefined) {
+      throw new NotFoundError(orderCode);
+    }
     // const stripeCode = order.orderId;
     // TODO: Check stripe order status
-    // return order;
+    order.finished = true;
+    // order.dispensedAt = new Date()
+
+    return order.save();
   }
 }
