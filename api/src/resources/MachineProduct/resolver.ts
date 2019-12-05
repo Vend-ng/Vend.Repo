@@ -14,12 +14,11 @@ export class MachineProductResolver {
     @Arg("machineid") machineId: string,
     @Args(() => PaginateInput, { validate: true }) { skip, take }: PaginateInput
   ): Promise<MachineProduct[]> {
-    return Machine.createQueryBuilder()
-      .relation(MachineProduct, "machine")
+    const products = await Machine.createQueryBuilder("machine")
+      .relation("products")
       .of(machineId)
-      .select()
-      .skip(skip)
-      .take(take)
-      .getMany();
+      .loadMany();
+
+    return products.slice(skip!, skip! + take!);
   }
 }
