@@ -93,10 +93,10 @@ export class OrderResolver {
     @Ctx() context: IContext
   ) {
     // TODO: Get machine from the current state if application is a machine instead
-    const order = await Order.createQueryBuilder()
+    const order = await Order.createQueryBuilder("order")
       .where("Order.finished = FALSE")
-      .andWhere('Order."machineId" = :machineId', { machineId })
-      .andWhere("Order.code = :orderCode", { orderCode }).getOne();
+      .andWhere('order."machineId" = :machineId', { machineId })
+      .andWhere("order.code = :orderCode", { orderCode }).getOne();
 
     if (order === undefined) {
       throw new Error("Code not valid.");
