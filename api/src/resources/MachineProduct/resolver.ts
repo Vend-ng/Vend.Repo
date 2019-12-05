@@ -1,6 +1,5 @@
 import { Arg, Args, Authorized, Query, Resolver } from "type-graphql";
 import { PaginateInput } from "../../lib/interfaces";
-import { Machine } from "../Machine";
 import { MachineProduct } from "./";
 
 /**
@@ -14,11 +13,10 @@ export class MachineProductResolver {
     @Arg("machineid") machineId: string,
     @Args(() => PaginateInput, { validate: true }) { skip, take }: PaginateInput
   ): Promise<MachineProduct[]> {
-    const products = await Machine.createQueryBuilder("machine")
-      .relation("products")
-      .of(machineId)
-      .loadMany();
-
-    return products.slice(skip!, skip! + take!);
+    return MachineProduct.createQueryBuilder()
+      .where('"MachineProduct"."machineId" = :machineId', { machineId })
+      .skip(skip)
+      .take(take)
+      .getMany();
   }
 }

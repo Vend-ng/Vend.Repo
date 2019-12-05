@@ -49,8 +49,10 @@ export class Product extends BaseEntity {
   @Column({ nullable: true })
   public description?: string;
 
-  @OneToMany(() => MachineProduct, (machineProduct: MachineProduct) => machineProduct.product)
-  public machineProducts: MachineProduct[];
+  @OneToMany(() => MachineProduct, (machineProduct: MachineProduct) => machineProduct.product, {
+    lazy: true
+  })
+  public machineProducts: Lazy<MachineProduct[]>;
 
   // Only allow 17 characters as statementDescriptor is 22 characters max on
   // stripe and we artificially add 5 with 'VEND '
