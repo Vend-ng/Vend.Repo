@@ -92,20 +92,23 @@ export class OrderResolver {
     @Arg("machine") machineId: string,
     @Ctx() context: IContext
   ) {
+    return Order.findOne({
+      code: orderCode
+    });
     // TODO: Get machine from the current state if application is a machine instead
-    const order = await Order.createQueryBuilder("order")
-      .where("Order.finished = FALSE")
-      .andWhere('order."machineId" = :machineId', { machineId })
-      .andWhere("order.code = :orderCode", { orderCode }).getOne();
-
-    if (order === undefined) {
-      throw new Error("Code not valid.");
-    }
-    // const stripeCode = order.orderId;
-    // TODO: Check stripe order status
-    order.finished = true;
-    // order.dispensedAt = new Date()
-
-    return order.save();
+    // const order = await Order.createQueryBuilder("order")
+    //   .where("Order.finished = FALSE")
+    //   .andWhere('order."machineId" = :machineId', { machineId })
+    //   .andWhere("order.code = :orderCode", { orderCode }).getOne();
+    //
+    // if (order === undefined) {
+    //   throw new Error("Code not valid.");
+    // }
+    // // const stripeCode = order.orderId;
+    // // TODO: Check stripe order status
+    // order.finished = true;
+    // // order.dispensedAt = new Date()
+    //
+    // return order.save();
   }
 }
