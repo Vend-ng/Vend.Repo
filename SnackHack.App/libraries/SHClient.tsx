@@ -85,4 +85,28 @@ export default class SHClient {
 
 
     }
+
+    async placeOrder(machineId: string, productIds: string[])
+    {
+        console.log("machineId: " + machineId + " productIds " + productIds)
+        var r = await this.client.mutate({
+            mutation: gql`
+            {
+                placeOrder(
+                    order: {
+                        productIds: ${productIds},
+                        machineId: ${machineId}
+                    }
+                )
+                {
+                    id,
+                    initiated,
+                    expires,
+                    finished,
+                    code
+                }
+            }`
+        });
+        return r.data.code; 
+    }
 }
