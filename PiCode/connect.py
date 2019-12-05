@@ -13,7 +13,6 @@
 
 import json
 import requests
-from gpio import gpiozero
 
 class Query:
     def __init__(url, key, mid):
@@ -31,9 +30,14 @@ def getNearbyMachines(radius, lat, long):
 
     return q_string
 
-led = LED(17)
-led2 = LED(22)
-led3 = LED(27)
+def completeOrder(mid, orderCode):
+    q_string = '{'
+    q_string += f"completeOrder(machine: \"{mid}\", orderCode: \"{orderCode}\")"
+    q_string += "{ Order { code, products {id, displayName }    }    }"
+    q_string += '}'
+
+    return q_string
+
 
 rad = 500
 coords = ('37.951759', '-91.776447')
@@ -41,23 +45,56 @@ coords = ('37.951759', '-91.776447')
 # -------------------------------------- #
 # An example to get the remaining rate limit using the Github GraphQL API.
 
-import requests
-import json
-
 url = 'http://snackhack.tech/graphql'
 json = { 'query' : getNearbyMachines(rad, coords[0], coords[1]) }
 headers = {'Authorization': 'Bearer 23e3a7d5-4a35-4e8a-afec-9bb1056d5b41'}
 
 r = requests.post(url=url, json=json, headers=headers)
 
-if r not none:
-    led.on()
-    
 data = r.json()['data']
 
 machine = data['nearbyMachines']  
 mid = machine[0]['id']
 print(mid)
+
+# Wait on Code from User
+orderCode = input("Enter A Code to Receive a Drink: ")
+
+orderJson = { 'query' : completeOrder(mid, orderCode) }
+orderRequest = requests.post(url=url, json=orderJson, headers=headers)
+print(orderRequest.json())
+
+#Process order and show drink(s) purchased
+"""
+from gpiozero import LED
+
+led1 = LED(17) 
+led2 = LED(22)
+led3 = LED(27)
+led4 = LED(?)
+
+
+if drink == DRINK1:
+    led1.on()
+    sleep(5)
+    led1.off()
+elif drink == DRINK2:
+    led2.on()
+    sleep(5)
+    led2.off()
+elif drink == DRINK3:
+    led3.on()
+    sleep(5)
+    led3.off()
+elif drink == DRINK4:
+    led4.on()
+    sleep(5)
+    led4.off()
+"""
+
+
+
+
 
 
 
